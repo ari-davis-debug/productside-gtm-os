@@ -1,6 +1,8 @@
 # 02 — AI-Native Go-to-Market
 
-> The phrase "AI-native" gets tossed around like it means something on its own. It doesn't. **AI-native is a shape, and the shape is a 7-step operating system.** Same shape I'm scoping right now for [Mento](https://github.com/ari-davis-debug/mento-gtm-case-study), retold for a product-management training company. The alphas you saw in `../alphas/` are not the AI-native part — they're the *outlying signals* that get harvested inside Step 5. The rest of the substrate is what makes them compound.
+> The phrase "AI-native" gets tossed around like it means something on its own. It doesn't. **AI-native is a shape, and the shape is a 7-step operating system.** Same shape used in the [Mento case study](https://github.com/ari-davis-debug/mento-gtm-case-study), retold for a product-management training company. The alphas in `../alphas/` are not the AI-native part — they're the *outlying signals* harvested inside Step 5. The rest of the substrate is what makes them compound.
+>
+> **If you're a GTM engineer onboarding to a new role:** this page is the map. Walk into the company, pipe the data plane into a lake (Step 2 — Airbyte is the lowest-effort path), look at the call transcripts to derive your own alphas (the derivation pattern lives at the bottom of this page), and follow the 7 steps to ship the substrate.
 
 ## The heuristic (one line per step)
 
@@ -33,10 +35,12 @@ A literal repo. Markdown files in `foundation/`, SQL files in `sql/`, playbooks 
 Every morning, the lake pulls:
 
 - **HubSpot** — accounts, contacts, deals, activities (read-only mirror into Supabase)
-- **LinkedIn** — JD postings, headcount deltas, job-change events (your existing scraper, now feeding a table)
+- **LinkedIn** — JD postings, headcount deltas, job-change events (scraper, feeding a table)
 - **Call transcripts** — Fireflies API for Trellus/Avoma exports, dumped raw + extracted into structured fields
 - **Alumni + cohort data** — LMS export, joined by domain
 - **External signal feeds** — the alpha CLIs (Step 5) write their event records here
+
+**Recommended path: Airbyte** for the standard connectors (HubSpot, Salesforce, Stripe, Snowflake, Postgres, Google Ads, etc.) and a small custom CLI factory (per [[har-cli-alpha-factory]]) for everything Airbyte doesn't cover — LinkedIn scrapes, SEC EDGAR, NIH SBIR, GitHub repo crawls. The split: **Airbyte for the boring 80%, custom CLIs for the alpha-grade 20%.** That way the engineer isn't reinventing CRM sync, they're spending their time on the sources nobody else is mining.
 
 This is what "AI-native" actually requires under the hood: **a queryable substrate that has every fact in one place.** No tab-switching. No "let me check the dashboard." A single SQL view can join call transcripts to alumni history to LinkedIn to EDGAR filings to BuiltWith stack — because all of it landed here this morning.
 
@@ -145,9 +149,33 @@ This is also where the audit workflows live — daily funnel-leak detection, pre
 
 ---
 
+## How to derive your own alphas (the part that travels)
+
+The seven Productside alphas in [`../alphas/`](../alphas/) are not the methodology — they're an *output* of the methodology, applied to one buyer. If you're a GTM engineer onboarding to a different company, you'll derive a different seven. Here's the pattern.
+
+```
+1. Pull last 200+ call transcripts into the lake (Step 2)
+2. Run a prompt over them in Claude Code (Step 3):
+     "What is the most-cited buying trigger across these calls? Quote
+      the exact phrases the buyers used. Cluster by trigger type."
+3. Look at the top 3 clusters. Each one is a candidate alpha.
+4. For each cluster, find the PUBLIC-RECORD analog of that trigger.
+     Example: cluster says "they just hired their first PM" →
+     public analog is "first PM-titled JD posted in last 30 days"
+5. Add 1–2 qualifying joins so the list is small and high-fit.
+     Funding stage. Tech stack. Headcount band. Industry.
+6. Write the cold message in the buyer's own language —
+     drawn directly from the transcript quotes you clustered.
+7. Ship the CLI to harvest the public signal daily (Step 5).
+8. Route ranked accounts to reps in Slack (Step 6).
+9. Measure (Step 7). Kill the alphas that don't close. Refit.
+```
+
+**The point**: the substrate is what makes this pattern repeatable. Step 2 puts the transcripts in the lake; Step 3 lets you query them in English; Step 5 is where the alpha gets built. Without the substrate, alpha-derivation is a slide deck. With it, alpha-derivation is something you run every quarter as buyers and triggers shift.
+
 ## The one-line version
 
-> **Most GTM Engineers ship lists. The 7-step substrate is what makes lists compound — and the alphas are the outlying signals that the substrate harvests at Step 5.** Without Steps 1–4, the alphas are isolated scripts. Without Steps 6–7, they're unmeasured. The whole point of "AI-native" is that the seven steps are one system, not seven projects.
+> **Most GTM engineers ship lists. The 7-step substrate is what makes lists compound — and the alphas are the outlying signals that the substrate harvests at Step 5.** Without Steps 1–4, the alphas are isolated scripts. Without Steps 6–7, they're unmeasured. The whole point of "AI-native" is that the seven steps are one system, not seven projects.
 
 ## Where each ai-native deep-dive lives
 
