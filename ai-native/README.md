@@ -1,20 +1,24 @@
-# `ai-native/` — What "AI-Native GTM" Actually Means
+# `ai-native/` — Deep Dives Into the 7-Step Heuristic
 
-Most "AI-native" claims collapse under inspection. This folder makes the term concrete.
+> "AI-native" isn't a feature, it's a shape — the 7-step OS in [`../case-study/02-ai-native-gtm.md`](../case-study/02-ai-native-gtm.md). This folder holds the **deep dives** for four of those steps, where the detail matters too much to live in the overview.
 
-The substrate isn't a tool. It isn't a model. It's a **queryable layer on top of the data plane** that turns four motions from human-bottlenecked into stakeholder-driven:
+## How the deep dives map to the heuristic
 
-1. **[`stakeholder-queries.md`](./stakeholder-queries.md)** — The CEO/CRO/CMO each open Claude Code and ask their own questions. No ticket, no analyst, no Thursday meeting. Worked queries with the SQL views they run on.
-2. **[`call-intelligence.md`](./call-intelligence.md)** — Trellus and Avoma record calls. The system around them turns transcripts into CRM fields, Slack alerts, and weekly win-pattern aggregations. Fireflies + Claude API substitute named.
-3. **[`audit-workflows.md`](./audit-workflows.md)** — Daily funnel-leak detection. Pre-committed kill/park/scale gates. Statistical-significance flags on every A/B. The quantitative discipline made automatic.
-4. **[`attribution-loop.md`](./attribution-loop.md)** — Every closed deal closes back to a trigger, and every trigger maps to an alpha. The substrate keeps itself honest.
+| Step in the OS | Deep dive page |
+|---|---|
+| **Step 2** (data + playbooks ingested daily) + **Step 6** (roll out to team) | [`call-intelligence.md`](./call-intelligence.md) — call transcripts flow into the lake, structured signals flow back out to the rep |
+| **Step 3** (stakeholders in Claude Code) | [`stakeholder-queries.md`](./stakeholder-queries.md) — three real queries from CEO/CRO/CMO with the SQL views they run on |
+| **Step 5** (agentic dev ships solutions) | [`../alphas/`](../alphas/) — the seven CLI alphas the factory stands up |
+| **Step 7** (measure → pipeline + revenue) | [`audit-workflows.md`](./audit-workflows.md) — daily funnel-leak detection + auto-enforced kill/park/scale gates |
+| **Step 7** (measure → pipeline + revenue) | [`attribution-loop.md`](./attribution-loop.md) — every closed deal closes back to a trigger; the substrate keeps itself honest |
 
-Each sub-file follows the same shape: **the worked example first, then the system around it, then what it replaces.**
+## Why the deep dives matter
 
-## Why this folder is the differentiator
+The overview tells you "stakeholders type questions, get answers in twelve seconds." The deep dive shows you the actual SQL view it ran. That's the difference between "AI-native is the shape of the future" and "here is exactly the thing I would build on Monday."
 
-The alphas folder shows "I can generate pipeline." Anyone with Clay and SmartLead can write something similar. This folder shows the part most candidates can't:
+If you're skimming, read [`../case-study/02-ai-native-gtm.md`](../case-study/02-ai-native-gtm.md). If you want to verify the claims, read these.
 
-> **The substrate where leadership becomes the GTM Engineer.**
+## What's *not* in this folder
 
-That's the moat. Lists are commodity. The substrate compounds.
+- The alphas themselves — those are in [`../alphas/`](../alphas/) because they're the Step-5 deep dive
+- Step 1 (repo) and Step 4 (bottlenecks) — those don't need a deep dive separate from what the live scaffold already shows in [`../example-productside-gtm/`](../example-productside-gtm/)

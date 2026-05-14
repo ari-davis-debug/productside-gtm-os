@@ -1,65 +1,160 @@
 # 02 — AI-Native Go-to-Market
 
-> *Stub. Fills in step 2 of the build plan. The differentiator — what most "GTM Engineer" candidates won't talk about.*
+> The phrase "AI-native" gets tossed around like it means something on its own. It doesn't. **AI-native is a shape, and the shape is a 7-step operating system.** Same shape I'm scoping right now for [Mento](https://github.com/ari-davis-debug/mento-gtm-case-study), retold for a product-management training company. The alphas you saw in `../alphas/` are not the AI-native part — they're the *outlying signals* that get harvested inside Step 5. The rest of the substrate is what makes them compound.
 
-## What goes here
+## The heuristic (one line per step)
 
-The frame: **most GTM Engineers ship lists. The AI-native version ships the substrate where leadership becomes the GTM Engineer.**
+| Step | What it is for Productside | AI-native flavor |
+|---|---|---|
+| **1** | Stand up the GTM repo | One queryable source of truth — Markdown + SQL + CLAUDE.md, version-controlled |
+| **2** | Data + playbooks ingested daily | HubSpot, LinkedIn, call transcripts, alumni records — all flowing into the lake every morning |
+| **3** | **Stakeholders in Claude Code** ← the wedge | Rina, CRO, CMO open the terminal and ask their own questions against the substrate |
+| **4** | Capture + prioritize bottlenecks | Bottlenecks surface from the data, not from gut-feel meetings |
+| **5** | **Agentic dev ships solutions** ← the alphas live here | Each alpha becomes a CLI in the factory, runs forever, feeds the queue |
+| **6** | Roll out to the team | Reps see ranked accounts in Slack daily with the verifiable claim drafted |
+| **7** | Measure → pipeline + revenue | Every closed deal closes back to a trigger; the substrate keeps itself honest |
 
-Lists are commodity. The substrate is the moat. The substrate is what compounds.
+If a section below has a deep-dive page, it's linked. Otherwise the section is the page.
 
-## The four pillars of AI-native GTM (to flesh out)
+---
 
-Each pillar gets a sub-page in [`../ai-native/`](../ai-native/). This page is the overview.
+## Step 1 — Stand up the GTM repo
 
-### 1. Stakeholders in Claude Code (Mento OS Step 3)
+A literal repo. Markdown files in `foundation/`, SQL files in `sql/`, playbooks in `foundation/playbooks/`. CLAUDE.md at the root defines the constitution. Git is the audit trail. This is mundane plumbing — and it is the precondition for every other step.
 
-Detail: [`../ai-native/stakeholder-queries.md`](../ai-native/stakeholder-queries.md)
+**For Productside specifically**: the alumni roster gets first-class treatment (it's a folder, not a CRM field). 280 Group's historical content is a folder. Course-completion data is a folder. The point isn't novelty; the point is that anything that matters has a home a human can read and a machine can query.
 
-The CEO, CRO, and CMO each open Claude Code and ask questions against the GTM substrate directly. Worked examples:
+→ The shape lives in [`../gtm-os/`](../gtm-os/) and the live scaffold lives in [`../example-productside-gtm/`](../example-productside-gtm/).
 
-- **Rina** types `which alumni from 2022–2024 cohorts work at public companies that filed an 8-K appointing a new CPO this quarter?` → answer in 12 seconds with the SQL view it ran on
-- **CRO** types `show me win-pattern signatures across our last 200 closed-won enterprise deals` → ranked correlate table
-- **CMO** types `what content gap shows up across our top 50 lost-to-no-decision deals?` → quoted excerpts from call transcripts
+---
 
-No tickets to data analysts. No "let me get back to you Thursday." The query loop closes inside the meeting.
+## Step 2 — Data + playbooks ingested daily
 
-### 2. Call intelligence as a system, not a feature
+Every morning, the lake pulls:
 
-Detail: [`../ai-native/call-intelligence.md`](../ai-native/call-intelligence.md)
+- **HubSpot** — accounts, contacts, deals, activities (read-only mirror into Supabase)
+- **LinkedIn** — JD postings, headcount deltas, job-change events (your existing scraper, now feeding a table)
+- **Call transcripts** — Fireflies API for Trellus/Avoma exports, dumped raw + extracted into structured fields
+- **Alumni + cohort data** — LMS export, joined by domain
+- **External signal feeds** — the alpha CLIs (Step 5) write their event records here
 
-Trellus and Avoma (named in the JD) record calls. **The system around them** is what matters:
+This is what "AI-native" actually requires under the hood: **a queryable substrate that has every fact in one place.** No tab-switching. No "let me check the dashboard." A single SQL view can join call transcripts to alumni history to LinkedIn to EDGAR filings to BuiltWith stack — because all of it landed here this morning.
 
-- Transcripts ingested via Fireflies + Claude API
-- Risk signals extracted (champion change, pricing concern, competitor mention, decision-criteria shift)
-- CRM fields auto-updated per signal taxonomy
-- Slack alerts on configurable triggers (`"@cro alert: champion at AcmeCo just used the word 'pause' three times in one call"`)
-- Win/loss pattern aggregation runs weekly and feeds back into ICP refit
+→ Deep dive on the call-transcript piece: [`../ai-native/call-intelligence.md`](../ai-native/call-intelligence.md)
 
-### 3. Funnel audit workflows
+---
 
-Detail: [`../ai-native/audit-workflows.md`](../ai-native/audit-workflows.md)
+## Step 3 — Stakeholders in Claude Code (the wedge)
 
-Quantitative GTM work the JD asked for, made AI-native:
+This is the part most "AI-native" pitches skip and the part that actually changes a company.
 
-- Daily funnel-leak detector: where is conversion dropping vs. trailing 7-day baseline, and which segment is dragging?
-- Pre-committed kill/park/scale gates per campaign — automated state transitions
-- Control-group A/B framework with statistical significance flags built into the dashboard
-- The CMO can ask `is the 'first PM hire' alpha outperforming the 'public CPO' alpha on meeting rate this quarter?` and get the answer
+The CEO, CRO, and CMO each open a terminal — literally Claude Code — and ask questions of the substrate **directly**. No ticket. No analyst. No "let me get back to you Thursday."
 
-### 4. Closed-loop attribution
+**Rina (CEO) types:**
+```
+Which alumni from 2022–2024 cohorts now work at companies that filed an
+8-K appointing a new CPO this quarter?
+```
 
-Detail: [`../ai-native/attribution-loop.md`](../ai-native/attribution-loop.md)
+Twelve seconds later: 12 alumni at 9 companies, with the filing URL and new exec name per row. She forwards the list to enterprise sales with one line.
 
-Every deal closes back to a trigger. Every trigger maps to an alpha. Every alpha gets a quarterly read on pipeline contribution × win rate × ACV × time-to-close vs. cold baseline. The substrate keeps itself honest.
+**CRO types:**
+```
+Across our last 200 calls, list every objection that mentioned "Reforge"
+or "Pragmatic" by name, and tag which deals they came from.
+```
 
-## The line
+A minute later: a ranked list of competitive losses with the actual quoted phrases, deal IDs, and the AE who took the call.
 
-> *"Most GTM Engineers ship lists. I ship the substrate where your CEO can ask 'which alumni work at companies that just hired their first CPO' and get an answer in 12 seconds. That compounds. A list doesn't."*
+**CMO types:**
+```
+Show me the 50 lost-to-no-decision deals from Q3 and cluster the top
+five recurring buyer objections from the call transcripts.
+```
 
-## TODO when filling
+The substrate runs the SQL view it was always going to run; Claude phrases it as English. The CMO sees the gap.
 
-- Open with the lists-vs-substrate distinction
-- One worked example per pillar (the queries above are real — flesh out the SQL view each one runs on)
-- Tie back to the JD's specific phrasing: AI-driven lead scoring, call summarization, recruiting workflow improvements
-- Close with the line above
+**This is what "AI-native" earns the company**: the analyst bottleneck dissolves. Decisions get made in the meeting, not after it. Stakeholders are *operators* of the data plane, not consumers of dashboards built about it.
+
+→ Worked queries with SQL: [`../ai-native/stakeholder-queries.md`](../ai-native/stakeholder-queries.md)
+
+---
+
+## Step 4 — Capture + prioritize bottlenecks
+
+Bottlenecks don't surface in QBRs. They surface in the lake. A bottleneck is anywhere a measurable thing is bleeding: reply rate dropped on a segment, alumni-to-enterprise conversion is flat, a copy variant just lost significance, an alpha's throughput collapsed.
+
+Each bottleneck gets a file in `bottlenecks/` with: what's broken, what the data says, what fixing it is worth, what builds it. The file is human-readable and machine-queryable. Quarterly, the team ranks them; the top-1 is what Step 5 builds next.
+
+For Productside, the bottlenecks I'd expect to surface first:
+- **Alumni-to-enterprise conversion is unmeasured.** No one knows if alumni inside an enterprise account predicts close rate.
+- **Rebrand backlink decay is unrecaptured.** 280 Group's authority is leaking to old URLs (this is also Alpha 3).
+- **First-PM-hire signal isn't covered.** Inbound from companies that publicly admit they have no PM is being missed entirely (this becomes Alpha 1).
+
+The bottleneck file *is* the spec for the next build.
+
+---
+
+## Step 5 — Agentic dev ships solutions (where the alphas live)
+
+This is where most candidates' "GTM Engineer" answer stops and where the actual job starts. The seven alphas in [`../alphas/`](../alphas/) are not standalone projects. They are **outlying-signal harvesters that the agentic-dev step stands up inside the factory**.
+
+Each alpha is one CLI binary:
+
+| Alpha | What it harvests | Source family |
+|---|---|---|
+| 1 — First PM Hire Cocktail | Founders publicly admitting zero PM maturity | LinkedIn JD × Crunchbase × BuiltWith |
+| 2 — Public CPO 8-K Trigger | New buying-authority arrivals at public cos | SEC EDGAR Item 5.02 |
+| 3 — 280 Group Backlink Recovery | Historical authority leaking from rebrand | Ahrefs × Wayback × LinkedIn |
+| 4 — Glassdoor Confessional | Engineers admitting PM-org pain | Glassdoor × Blind |
+| 5 — SBIR Commercialization | Deep-tech founders hitting commercialization wall | NSF/NIH SBIR × LinkedIn |
+| 6 — GitHub Org Tells On Itself | Companies mid-standardization of product practice | GitHub API × LinkedIn |
+| 7 — PM Team Scaling Signal | PM orgs past the framework-required inflection | LinkedIn headcount × JDs |
+
+**The factory pattern**: each CLI is small (a day or two of Go), independent (one source, one purpose), composable (writes normalized events to the lake), and replaceable (if a source dies, swap the CLI without touching the rest).
+
+The agentic dev part isn't that an LLM writes the CLI — it's that **Claude Code is the operator** writing specs, scaffolding the CLI, generating the SQL view, and wiring the rollout. The human reviews and ships.
+
+→ Each alpha fully built: [`../alphas/`](../alphas/) (Alpha 1 is the reference template)
+
+---
+
+## Step 6 — Roll out to the team
+
+Pipeline that never reaches a rep is theater. Roll-out is the part that makes the substrate matter:
+
+- **Slack alerts**, per-rep, every morning: "Three new accounts in your queue: [name] (Alpha 1), [name] (Alpha 1.5), [name] (Alpha 4). Verifiable claim already drafted, [link]."
+- **Per-alpha slash-commands** in Claude Code: `/today` shows the queue; `/draft <account>` writes the opener; `/log <account> not-fit` updates the substrate.
+- **Different views for different teams**: enterprise reps see private-training prospects; individual-course advisors see different segments; CS sees alumni-at-risk signals.
+- **Two-way sync to HubSpot**: every action a rep takes lands in the CRM the company already pays for.
+
+The point: AI-native doesn't replace the rep. It removes everything that wasn't the rep's job.
+
+→ Deep dive on the call-intel side of roll-out: [`../ai-native/call-intelligence.md`](../ai-native/call-intelligence.md)
+
+---
+
+## Step 7 — Measure → pipeline + revenue
+
+Every closed deal closes back to a trigger. Every trigger maps to an alpha. Every alpha gets a quarterly read on pipeline contribution × win rate × ACV × time-to-close vs. cold baseline. The substrate keeps itself honest, and the underperforming alphas get killed.
+
+This is also where the audit workflows live — daily funnel-leak detection, pre-committed kill/park/scale gates, statistical-significance flags on every A/B.
+
+→ Audit side: [`../ai-native/audit-workflows.md`](../ai-native/audit-workflows.md)
+→ Attribution side: [`../ai-native/attribution-loop.md`](../ai-native/attribution-loop.md)
+
+---
+
+## The one-line version
+
+> **Most GTM Engineers ship lists. The 7-step substrate is what makes lists compound — and the alphas are the outlying signals that the substrate harvests at Step 5.** Without Steps 1–4, the alphas are isolated scripts. Without Steps 6–7, they're unmeasured. The whole point of "AI-native" is that the seven steps are one system, not seven projects.
+
+## Where each ai-native deep-dive lives
+
+| Step | Deep dive page |
+|---|---|
+| 2 (data) + 6 (roll-out) | [`../ai-native/call-intelligence.md`](../ai-native/call-intelligence.md) |
+| 3 (stakeholders) | [`../ai-native/stakeholder-queries.md`](../ai-native/stakeholder-queries.md) |
+| 7 (audit) | [`../ai-native/audit-workflows.md`](../ai-native/audit-workflows.md) |
+| 7 (attribution) | [`../ai-native/attribution-loop.md`](../ai-native/attribution-loop.md) |
+| 5 (alphas as outlying signals) | [`../alphas/`](../alphas/) — seven CLIs, one factory |
